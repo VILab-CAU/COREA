@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>COREA: Coarse-to-Fine 3D Representation Alignment Between Relightable 3D Gaussians and SDF via Bidirectional 3D-to-3D Supervision</title>
+  <meta name="description" content="Project page template for a computer vision paper." />
+
+  <!-- ✅ TAB ICON (favicon) using Taegeuk.png -->
+  <link rel="icon" type="image/png" href="./assets/icons/Taegeuk.png" />
+  <!-- Optional (nice for iOS home screen / pinned) -->
+  <link rel="apple-touch-icon" href="./assets/icons/Taegeuk.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --card:#f8f9fb;
+      --muted:#556070;
+      --text:#111213;
+
+      /* Brand / neon palette */
+      --brandBlue:#0056A2;     /* Pantone 2945C */
+      --accent:#00D4FF;        /* neon cyan */
+      --neonBlue1:#00D4FF;
+      --neonBlue2:#2B74FF;
+
+      /* COREA gradient (for CoReA letters) */
+      --corea-grad: linear-gradient(
+        90deg,
+        #FF2D55 0%,
+        #FF2D55 35%,
+        #0056A2 65%,
+        #0056A2 100%
+      );
+
+      /* Glow shadows */
+      --glow-sm: 0 0 14px rgba(0,212,255,.22);
+      --glow-md: 0 0 26px rgba(0,212,255,.24);
+      --glow-lg: 0 0 44px rgba(0,212,255,.28);
+    }
+
+    *{box-sizing:border-box}
+
+    /* ✅ PRE-TLDR: remove neon aura on page background */
+    body{
+      margin:0;
+      color:var(--text);
+      font:16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: #ffffff;
+    }
+
+    /* ✅ PRE-TLDR: neutral links (no glow) */
+    a{color:var(--brandBlue);text-decoration:none}
+    a:hover{ text-decoration:none; filter:none; }
+
+    /* ✅ PRE-TLDR: neutral focus (no neon glow) */
+    :focus-visible{
+      outline:3px solid rgba(0,86,162,.25);
+      outline-offset:3px;
+      border-radius:12px;
+    }
+
+    .wrap{max-width:980px;margin:0 auto;padding:28px 22px}
+
+    header.hero{padding:64px 0 24px;border-bottom:1px solid #e5e7eb}
+    header.hero{ text-align:center; }
+    header.hero .authors,
+    header.hero .link-row{ justify-content:center; }
+
+    /* Top bar (Pantone 2945C) — ✅ PRE-TLDR: no neon shadow */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--brandBlue);
+      border-bottom: 1px solid rgba(255,255,255,0.22);
+      box-shadow: none;
+    }
+    .topbar-inner{
+      max-width:980px;
+      margin:0 auto;
+      padding: 10px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .topbar-logos{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 14px;
+    }
+    
+    .nowrap{
+      white-space: nowrap;
+    }
+
+    /* ✅ PRE-TLDR: remove neon glow on logo pills */
+    .topbar-logos a{
+      width: 128px;
+      height: 44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.98);
+      border: 1px solid rgba(0,86,162,.16);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+
+    .topbar-logos a:hover{
+      background:#ffffff;
+      text-decoration:none;
+      transform: translateY(-1px);
+      border-color: rgba(0,86,162,.22);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+    }
+
+    .topbar-logos img{
+      height: 24px;
+      max-width: 100%;
+      width: auto;
+      display:block;
+      filter: none;
+    }
+
+    @media (max-width: 560px){
+      .topbar-logos{ gap: 10px; }
+      .topbar-logos a{ width: 98px; height: 40px; border-radius: 12px; padding: 7px 10px; }
+      .topbar-logos img{ height: 20px; }
+    }
+
+    /* Title */
+    .title{
+      margin:0 0 10px;
+      line-height:1.12;
+      letter-spacing:-0.02em;
+      display:flex;
+      flex-direction:column;   /* 위: COREA, 아래: 부제 */
+      align-items:center;      /* ✅ COREA 기준으로 수평 중앙 정렬 */
+    }
+
+    .title-row{
+      display:inline-flex;
+      align-items:baseline;
+      gap:12px;
+    }
+
+    /* ✅ PRE-TLDR: remove neon glow on icon */
+    .title-icon{
+      width:44px;
+      height:44px;
+      object-fit:contain;
+      display:block;
+      transform: translateY(2px);
+      filter: none;
+    }
+
+    @media (max-width:560px){
+      .title-icon{ width:36px; height:36px; }
+    }
+
+    /* =========================
+       ✅ COREA ONLY: main animated title
+       ========================= */
+    .title-main{
+      position: relative;
+      display:block;
+
+      /* ✅ COREA size slightly reduced */
+      font-size: clamp(34px, 5.8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.0;
+
+      background: linear-gradient(
+        90deg,
+        #FF2D55 0%,
+        #FF2D55 35%,
+        #0056A2 65%,
+        #0056A2 100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+
+      text-shadow: none;
+      animation: coreaBidirectionalText 3.6s ease-in-out infinite;
+    }
+
+    @keyframes coreaBidirectionalText {
+      0% { background-position: 0% 50%; filter: brightness(0.8); }
+      40% { filter: brightness(1.0); }
+      50% { background-position: 100% 50%; filter: brightness(1.15); }
+      60% { filter: brightness(1.0); }
+      100% { background-position: 0% 50%; filter: brightness(0.8); }
+    }
+
+    /* Underline Reverse Direction Flow */
+    .title-main::before{
+      content:"";
+      position:absolute;
+      left:-6%;
+      right:-6%;
+      bottom:-8px;
+      height:4px;
+      border-radius:999px;
+      background: linear-gradient(
+        90deg,
+        #0056A2 0%,
+        #0056A2 35%,
+        #FF2D55 65%,
+        #FF2D55 100%
+      );
+      background-size: 200% 100%;
+      opacity: 0.9;
+      z-index:-1;
+      animation: coreaBidirectionalBar 3.6s ease-in-out infinite;
+    }
+
+    @keyframes coreaBidirectionalBar {
+      0% { background-position: 100% 50%; opacity:0.6; }
+      50% { background-position: 0% 50%; opacity:1.0; }
+      100% { background-position: 100% 50%; opacity:0.6; }
+    }
+
+    @supports not (-webkit-background-clip:text){
+      .title-main{ color: var(--brandBlue); background:none; filter:none; animation:none; }
+      .title-main::before{ display:none; }
+    }
+
+    /* motion accessibility */
+    @media (prefers-reduced-motion: reduce){
+      .title-main{ animation:none; filter:none; }
+      .title-main::before{ animation:none; }
+    }
+
+    .title-sub{
+      display:inline-block;          /* ✅ 내용 폭만큼만 */
+      margin-top:10px;
+      font-size:clamp(18px,2.9vw,29px);
+      font-weight:800;
+      letter-spacing:-0.015em;
+      text-align:center;             /* ✅ 두 줄 모두 가운데 정렬 */
+    }
+
+    /* CoReA 하나의 gradation 느낌 */
+    .corea-accent{
+      font-weight: 900;
+      background-image: var(--corea-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: none;
+    }
+    /* Co: 왼쪽 영역 */
+    .corea-accent--co{
+      background-size: 300% 100%;
+      background-position: 0% 50%;
+    }
+    /* Re: 가운데 영역 */
+    .corea-accent--re{
+      background-size: 300% 100%;
+      background-position: 50% 50%;
+    }
+    /* A: 오른쪽 영역 */
+    .corea-accent--a{
+      background-size: 300% 100%;
+      background-position: 100% 50%;
+    }
+
+    .sub-accent{
+      color: var(--brandBlue);
+      font-weight: 900;
+      text-shadow: none;
+    }
+
+    /* Authors */
+    .authors{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:18px}
+    .authors sup{font-size:12px;color:var(--muted)}
+    .author{ color: var(--brandBlue); font-weight:700; text-decoration:none; }
+    .author:hover{ text-decoration:none; filter:none; }
+    .affils{margin-top:8px;color:var(--muted)}
+
+    .aff-icon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 20px;
+      height: 20px;
+      margin-left: 4px;
+      vertical-align: -2px;
+    }
+    .aff-icon img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:contain;
+      filter: none;
+    }
+
+    .sup-sep{ margin: 0 1px; }
+
+    /* Project links */
+    .link-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+      justify-content:center;
+      margin-top:14px;
+      font-size:15px;
+    }
+
+    .projlink{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 16px;
+      border-radius:999px;
+      background: var(--brandBlue);
+      color:#ffffff !important;
+      font-weight:900;
+      letter-spacing:-0.01em;
+      text-decoration:none;
+      border:1px solid rgba(0,0,0,0.06);
+      box-shadow: none;
+      text-shadow: none;
+      transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease, background 140ms ease;
+    }
+    .projlink:hover{
+      text-decoration:none;
+      transform: translateY(-1px);
+      background: #004a8c;
+      box-shadow: none;
+      filter:none;
+    }
+    .projlink:active{ transform: translateY(0px) scale(0.99); }
+    .projlink:focus-visible{
+      outline: 3px solid rgba(255,255,255,0.38);
+      outline-offset: 3px;
+    }
+
+    /* =========================
+       ✅ FROM TLDR AND BELOW: re-enable neon styling
+       ========================= */
+    .after-tldr{
+      position:relative;
+      z-index:0;
+    }
+
+    .after-tldr::before{
+      content:none;
+    }
+
+    .after-tldr > *{ position:relative; z-index:1; }
+
+    .after-tldr a{ color: var(--accent); }
+    .after-tldr a:hover{ text-decoration:none; filter: drop-shadow(0 0 10px rgba(0,212,255,.28)); }
+
+    .after-tldr :focus-visible{
+      outline:3px solid rgba(0,212,255,.35);
+      outline-offset:3px;
+      border-radius:12px;
+    }
+
+    /* Cards */
+    .card{
+      background:var(--card);
+      border:1px solid rgba(0,86,162,.16);
+      border-radius:18px;
+      padding:20px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08), var(--glow-sm);
+      transition: box-shadow 140ms ease, transform 140ms ease, border-color 140ms ease;
+    }
+    .card:hover{
+      border-color: rgba(0,212,255,.26);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.10), var(--glow-md);
+      transform: translateY(-1px);
+    }
+
+    h2{margin:0 0 14px;font-size:22px}
+    .section{margin-top:28px}
+    .footer{margin-top:36px;color:var(--muted);font-size:14px;text-align:center}
+
+    pre{
+      background:#f4f6fb;
+      border:1px solid rgba(0,86,162,.16);
+      padding:14px;
+      border-radius:12px;
+      overflow:auto;
+      color:#1a1f29;
+      box-shadow: none;
+    }
+    .card:hover pre{ box-shadow:none; }
+
+    code{font-family:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace}
+
+    /* TL;DR */
+    .tldr-card{ padding:18px 20px; }
+    .tldr-label{ font-weight:900; letter-spacing:-0.01em; margin:0 0 6px; font-size:14px; color:#1a1f29; }
+    .tldr-text{ margin:0; font-size:15.5px; color:#1a1f29; }
+
+    /* Media container */
+    .thumb{
+      aspect-ratio:16/9;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(0,86,162,.18);
+      background:#ffffff;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08), var(--glow-sm);
+      transition: box-shadow 140ms ease, border-color 140ms ease, transform 140ms ease;
+    }
+    .thumb:hover{
+      border-color: rgba(0,212,255,.26);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.10), var(--glow-md);
+      transform: translateY(-1px);
+    }
+
+    .thumb video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    /* Hover magnifier (images only) */
+    .thumb.thumb--zoom{ position:relative; cursor:zoom-in; }
+    .thumb.thumb--zoom .magnifier-lens{
+      position:absolute;
+      width:160px;
+      height:160px;
+      border-radius:999px;
+      border:1px solid rgba(0,212,255,.22);
+      background-repeat:no-repeat;
+      box-shadow:0 10px 28px rgba(0,0,0,0.16), var(--glow-sm);
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      z-index:10;
+    }
+
+    /* Fit mode (images) */
+    .thumb--fit{ aspect-ratio:auto; overflow:hidden; }
+    .thumb img{
+      width:100%;
+      height:auto;
+      display:block;
+      background:#fff;
+      border:0;
+      border-radius:0;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    /* ===== 95% + centered (only for .thumb--fit images) ===== */
+    .thumb.thumb--fit{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .thumb.thumb--fit img{
+      width:95%;
+      height:auto;
+      display:block;
+      margin:0 auto;
+    }
+
+    /* Abstract-like blocks */
+    .abstract-card{padding:22px}
+    .abstract-figure{margin:0 0 14px}
+    .figure-cap{margin-top:8px;color:var(--muted);font-size:14px}
+    .blurb{ margin:8px 0 0; color:var(--muted); font-size:14px; line-height:1.55; }
+    .abstract-text{font-size:15.5px}
+
+    /* Subcards */
+    .subcard{
+      background:#ffffff;
+      border:1px solid rgba(0,86,162,.16);
+      border-radius:14px;
+      padding:18px;
+      margin-top:16px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.06), var(--glow-sm);
+      transition: box-shadow 140ms ease, border-color 140ms ease, transform 140ms ease;
+    }
+    .subcard:hover{
+      border-color: rgba(0,212,255,.26);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.08), var(--glow-md);
+      transform: translateY(-1px);
+    }
+
+    /* Qualitative stack */
+    .media-stack{display:flex;flex-direction:column;gap:16px}
+    .media{display:flex;flex-direction:column;gap:8px}
+
+    /* ===== Additional results (single video + still previews) ===== */
+    .video-switcher{ display:flex; flex-direction:column; gap:12px; text-align:center; }
+
+    .video-switcher-head{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .current-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background: linear-gradient(90deg, var(--brandBlue), var(--neonBlue2));
+      color:#ffffff;
+      font-size:13px;
+      font-weight:900;
+      box-shadow: 0 12px 26px rgba(0,86,162,0.22), var(--glow-sm);
+    }
+
+    /* ✅ FIX: Additional Results pill = Pantone 2945C solid + no neon */
+    #additional .current-pill{
+      background: var(--brandBlue);
+      color:#ffffff;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: none;
+      text-shadow: none;
+      filter:none;
+    }
+    #additional .current-pill span{ text-shadow:none; filter:none; }
+
+    .video-thumbs{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+
+    .video-thumb{
+      width:140px;
+      height:86px;
+      border-radius:14px;
+      border:2px solid rgba(0,86,162,.18);
+      background:#ffffff;
+      cursor:pointer;
+      padding:0;
+      position:relative;
+      overflow:hidden;
+      transition:transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+    }
+
+    .video-thumb:hover{
+      transform: translateY(-1px);
+      border-color: rgba(0,212,255,.42);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.10), var(--glow-sm);
+    }
+
+    .video-thumb.is-active{
+      border-color: var(--neonBlue1);
+      box-shadow: 0 16px 34px rgba(0,86,162,.22), var(--glow-md);
+      filter: brightness(1.02);
+    }
+
+    .video-thumb-media{ position:absolute; inset:0; }
+
+    .video-thumb-preview{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      background:#000;
+    }
+
+    .video-thumb-badge{
+      position:absolute;
+      left:10px;
+      bottom:10px;
+      padding:5px 9px;
+      border-radius:999px;
+      background: rgba(0,0,0,0.55);
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:-0.01em;
+      backdrop-filter: blur(6px);
+    }
+
+    .video-thumb.is-active .video-thumb-badge{
+      background: linear-gradient(90deg, var(--brandBlue), var(--neonBlue2));
+      box-shadow: var(--glow-sm);
+    }
+
+    @media (max-width:560px){
+      .video-thumb{ width:122px; height:78px; border-radius:12px; }
+      .video-thumb-badge{ left:8px; bottom:8px; font-size:11.5px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-logos" aria-label="Affiliation logos">
+        <a href="https://www.cau.ac.kr/index.do" target="_blank" rel="noopener">
+          <img src="./assets/logo/chung_ang_univ.png" alt="ChungAng University logo" />
+        </a>
+        <a href="https://www.vilab.cau.ac.kr/home" target="_blank" rel="noopener">
+          <img src="./assets/logo/VIlab.png" alt="VIlab logo" />
+        </a>
+        <a href="https://cmlab.cau.ac.kr" target="_blank" rel="noopener">
+          <img src="./assets/logo/CMlab.png" alt="CMlab logo" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="prevideo">
+      <header class="hero">
+        <h1 class="title">
+          <span class="title-row">
+            <img class="title-icon" src="./assets/icons/Taegeuk.png" alt="COREA icon" />
+            <span class="title-main">COREA:</span>
+          </span>
+
+          <!-- ✅ CoReA 하나의 gradation + Between 윗줄 -->
+          <span class="title-sub">
+            <span class="corea-accent corea-accent--co">Co</span>arse-to-Fine 3D
+            <span class="corea-accent corea-accent--re">Re</span>presentation
+            <span class="corea-accent corea-accent--a">A</span>lignment
+            Between<br>
+            <span class="nowrap">
+              Relightable 3D Gaussians and SDF via Bidirectional 3D-to-3D Supervision
+            </span>
+          </span>
+        </h1>
+
+        <div class="authors">
+          <a class="author" href="https://sites.google.com/vilab.cau.ac.kr/jaeyoonlee" target="_blank" rel="noopener">
+            Jaeyoon Lee<sup>*<span class="sup-sep">,</span>
+              <span class="aff-icon" title="Chung-Ang University" aria-label="Chung-Ang University">
+                <img src="./assets/icons/puang.png" alt="" />
+              </span>
+            </sup>
+          </a>
+          <a class="author" href="https://sites.google.com/view/hjjung-homepage/홈" target="_blank" rel="noopener">
+            Hojoon Jung<sup>*<span class="sup-sep">,</span>
+              <span class="aff-icon" title="Chung-Ang University" aria-label="Chung-Ang University">
+                <img src="./assets/icons/puang.png" alt="" />
+              </span>
+            </sup>
+          </a>
+          <a class="author" href="https://sites.google.com/vilab.cau.ac.kr/hst/" target="_blank" rel="noopener">
+            Sungtae Hwang<sup>
+              <span class="aff-icon" title="Chung-Ang University" aria-label="Chung-Ang University">
+                <img src="./assets/icons/puang.png" alt="" />
+              </span>
+            </sup>
+          </a>
+          <a class="author" href="https://sites.google.com/view/ozbro/" target="_blank" rel="noopener">
+            Jihyong Oh<sup>†<span class="sup-sep">,</span>
+              <span class="aff-icon" title="Chung-Ang University" aria-label="Chung-Ang University">
+                <img src="./assets/icons/puang.png" alt="" />
+              </span>
+            </sup>
+          </a>
+          <a class="author" href="https://sites.google.com/site/jwchoivision/home" target="_blank" rel="noopener">
+            Jongwon Choi<sup>†<span class="sup-sep">,</span>
+              <span class="aff-icon" title="Chung-Ang University" aria-label="Chung-Ang University">
+                <img src="./assets/icons/puang.png" alt="" />
+              </span>
+            </sup>
+          </a>
+        </div>
+
+        <div class="affils">
+          <span>
+            <span class="aff-icon" aria-hidden="true">
+              <img src="./assets/icons/puang.png" alt="" />
+            </span>
+            Chung-Ang University
+          </span>
+        </div>
+
+        <div class="affils"><span><sup>*</sup>Equal Contribution, <sup>†</sup>Co-Corresponding Authors</span></div>
+
+        <div class="link-row" aria-label="Project links">
+          <a class="projlink" href="./assets/paper.pdf" target="_blank" rel="noopener">Paper</a>
+          <a class="projlink" href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank" rel="noopener">arXiv</a>
+          <a class="projlink" href="https://github.com/YOUR/REPO" target="_blank" rel="noopener">Code</a>
+        </div>
+      </header>
+    </div>
+
+    <div class="after-tldr">
+      <section class="section card tldr-card" id="tldr">
+        <p class="tldr-text">
+          <span class="tldr-label">TL;DR :</span>
+          COREA is the first unified framework that jointly learns relightable 3D Gaussians and an SDF via coarse-to-fine 3D-to-3D supervision to improve geometry reconstruction and physically-based relighting.
+        </p>
+      </section>
+
+      <section id="video" class="section card">
+        <div class="thumb">
+          <video autoplay muted loop playsinline controls preload="metadata">
+            <source src="./assets/videos/Teaser.mp4#t=1" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
+
+      <section class="section card abstract-card" id="abstract">
+        <h2>Abstract</h2>
+
+        <figure class="abstract-figure">
+          <div class="thumb thumb--fit">
+            <img src="./assets/Teaser.png" alt="Abstract figure" />
+          </div>
+        </figure>
+
+        <div class="abstract-text">
+          <p>We present the first unified framework that jointly learns relightable 3D Gaussians and a neural Signed Distance Field (SDF) through coarse-to-fine bidirectional 3D-to-3D supervision, enabling accurate geometry reconstruction and physically-based rendering (PBR). While recent 3D Gaussian Splatting (3DGS) works extend beyond novel-view synthesis (NVS) to mesh reconstruction and PBR, existing methods infer 3D properties indirectly from rendered 2D images, yielding coarse meshes and unreliable BRDF and lighting decomposition.</p>
+          <p>To address these limitations, our approach jointly optimizes SDF and 3DGS directly in 3D space. Depth-guided SDF Alignment (DSA) uses Gaussian depth maps to anchor SDF rays and refine SDF normals via pixel-wise depth gradients. Normal-guided Gaussian Alignment (NGA) projects Gaussians onto the SDF surface, supervises Gaussian normals with SDF normals, and applies normal-aware densification to capture fine-scale geometry. To prevent excessive Gaussian splitting during normal-aware densification, we introduce Dual-Density Control (DDC) using both image and geometry gradient cues, improving memory.</p>
+          <p>The precisely aligned geometry supplies accurate normals to support differentiable PBR, enabling faithful BRDF–lighting decomposition. Experiments on standard benchmarks demonstrate superior performance in NVS, mesh reconstruction, and PBR. The code and project page will be publicly released.</p>
+        </div>
+      </section>
+
+      <section class="section card abstract-card" id="overview">
+        <h2>Overview of the COREA framework.</h2>
+
+        <figure class="abstract-figure">
+          <div class="thumb thumb--fit">
+            <img src="./assets/framework.png" alt="Overview of the COREA framework" />
+          </div>
+        </figure>
+
+        <div class="abstract-text">
+          <p>Our method jointly trains relightable 3D Gaussians and a SDF via coarse-to-fine bidirectional 3D-to-3D supervision.
+          The first stage, Bidirectional 3D-to-3D Supervision, consists of two complementary steps:
+          (i) DSA aligns the SDF to the 3DGS by leveraging depth rendered from Gaussians and matching SDF normals to pixel-wise depth gradients of 3DGS;
+          (ii) NGA aligns 3DGS to the SDF by matching Gaussian depth to the SDF depth and supervising Gaussian normals with SDF normals.
+          To prevent excessive Gaussian splitting during NGA, the DDC module suppresses unnecessary densification for efficient geometry refinement.
+          In the second stage, Inverse PBR is performed using the refined geometry to decompose BRDF and lighting and enable relighting under novel illumination conditions.</p>
+        </div>
+      </section>
+
+      <div id="quantitative" class="subcard">
+        <h3 style="margin:0 0 10px;font-size:18px;">Quantitative comparison</h3>
+        <div class="thumb thumb--fit no-zoom">
+          <img src="./assets/Quantitative_comparison.png" alt="Quantitative table" />
+        </div>
+        <div class="embed-actions">
+          <p class="blurb">
+            We evaluate novel-view synthesis (NVS), mesh reconstruction, and physically-based rendering (PBR) using the DTU and Tanks&Temples datasets.
+            N/S denotes methods that do not support the corresponding task, and OOM indicates evaluation failures caused by memory limitations.
+            The best, second-best, and third-best results are highlighted in red, yellow, and purple, respectively.
+          </p>
+        </div>
+      </div>
+
+      <div id="qualitative" class="subcard">
+        <h3 style="margin:0 0 10px;font-size:18px;">Qualitative comparison</h3>
+
+        <div class="media-stack">
+          <div class="media">
+            <div class="thumb thumb--fit">
+              <img src="./assets/Qualitative_NVS.png" alt="Qualitative results (NVS)" />
+            </div>
+            <p class="blurb">
+              We compare COREA with recent Gaussian-based methods on three tasks: NVS, PBR, and Mesh Reconstruction. All results are rendered on a white background for consistent visual comparison.
+              Artifacts such as black background patches or dark speckles observed in some baselines stem from excessive Gaussian opacity; by contrast, COREA produces clean, artifact-free renderings on white backgrounds.
+              Our method also provides results for all three tasks, whereas others show N/S (Not Supported) or OOM (Out of Memory) in several cases.
+              Overall, COREA yields sharper novel views, more faithful BRDF and lighting decomposition, and finer geometric details through coarse-to-fine bidirectional 3D-to-3D supervision.
+            </p>
+          </div>
+
+          <div class="media">
+            <div class="thumb thumb--fit">
+              <img src="./assets/Qualitative_PBR.png" alt="Qualitative results (PBR)" />
+            </div>
+            <p class="blurb">
+              We compare COREA with recent relightable Gaussian-based methods under varying illumination conditions.
+              The first row shows PBR renderings under the original lighting setup, while the remaining rows illustrate relighting results under directional lights and various HDR environment maps.
+              Compared to previous methods that exhibit black background artifacts or unstable reflectance under varying illumination,
+              COREA maintains consistent shading, clean appearance, and accurate reflectance reconstruction across all lighting conditions, demonstrating robust BRDF and geometry alignment.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <section class="section card" id="additional">
+        <h2>Additional Results</h2>
+        <p class="figure-cap">
+          Demos for Novel-view Synthesis, Mesh Reconstruction, and Physically-based Rendering.
+          (Click a thumbnail to switch)
+        </p>
+
+        <div class="video-switcher" data-video-switcher>
+          <div class="video-switcher-head">
+            <div class="current-pill" aria-live="polite">
+              <span data-current-label>Novel-view Synthesis Comparison</span>
+            </div>
+          </div>
+
+          <div class="thumb" style="aspect-ratio:16/9;">
+            <video id="additionalPlayer" autoplay muted loop playsinline controls preload="metadata">
+              <source id="additionalSource" src="./assets/videos/NVS.mp4#t=1" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <div class="video-thumbs" aria-label="Additional results selector">
+            <button class="video-thumb is-active" type="button"
+                    aria-label="Play Novel-view Synthesis Comparison"
+                    data-video-src="./assets/videos/NVS.mp4#t=1"
+                    data-video-label="Novel-view Synthesis Comparison">
+              <div class="video-thumb-media" aria-hidden="true">
+                <video class="video-thumb-preview" muted playsinline preload="auto">
+                  <source src="./assets/videos/NVS.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-thumb-badge">NVS</div>
+            </button>
+
+            <button class="video-thumb" type="button"
+                    aria-label="Play Mesh Reconstruction Comparison"
+                    data-video-src="./assets/videos/Mesh.mp4#t=1"
+                    data-video-label="Mesh Reconstruction Comparison">
+              <div class="video-thumb-media" aria-hidden="true">
+                <video class="video-thumb-preview" muted playsinline preload="auto">
+                  <source src="./assets/videos/Mesh.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-thumb-badge">Mesh</div>
+            </button>
+
+            <button class="video-thumb" type="button"
+                    aria-label="Play Physically-based Rendering Comparison"
+                    data-video-src="./assets/videos/PBR.mp4#t=1"
+                    data-video-label="Physically-based Rendering Comparison">
+              <div class="video-thumb-media" aria-hidden="true">
+                <video class="video-thumb-preview" muted playsinline preload="auto">
+                  <source src="./assets/videos/PBR.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div class="video-thumb-badge">PBR</div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="bibtex" class="section card">
+        <h2>BibTeX</h2>
+        <pre><code>@inproceedings{corea2025arXiv,
+  title     = {COREA: Coarse-to-Fine 3D Representation Alignment Between Relightable 3D Gaussians and SDF via Bidirectional 3D-to-3D Supervision},
+  author    = {Jaeyoon Lee and Hojoon Jung and Sungtae Hwang and Jihyong Oh and Jongwon Choi},
+  booktitle = {arXiv},
+  year      = {2025}
+}</code></pre>
+      </section>
+
+      <p class="footer">© 2025 Your Name(s). Hosted on GitHub Pages.</p>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    /* ===== Image magnifier ===== */
+    const ZOOM = 2.6;
+    const LENS = 160;
+    const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+    function enableMagnifier(img){
+      const thumb = img.closest('.thumb');
+      if(!thumb) return;
+      if(thumb.querySelector('video')) return;
+      if(thumb.classList.contains('no-zoom')) return;
+
+      thumb.classList.add('thumb--zoom');
+
+      let lens = null;
+
+      function ensureLens(){
+        if(lens) return lens;
+        lens = document.createElement('div');
+        lens.className = 'magnifier-lens';
+        lens.style.width = lens.style.height = `${LENS}px`;
+        lens.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+        thumb.appendChild(lens);
+        return lens;
+      }
+
+      function update(e){
+        const rect = thumb.getBoundingClientRect();
+        const lx = LENS / 2;
+
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+        x = clamp(x, lx, rect.width - lx);
+        y = clamp(y, lx, rect.height - lx);
+
+        const l = ensureLens();
+        l.style.left = `${x}px`;
+        l.style.top  = `${y}px`;
+
+        const bgW = rect.width * ZOOM;
+        const bgH = rect.height * ZOOM;
+        l.style.backgroundSize = `${bgW}px ${bgH}px`;
+
+        const bgX = -(x * ZOOM - lx);
+        const bgY = -(y * ZOOM - lx);
+        l.style.backgroundPosition = `${bgX}px ${bgY}px`;
+      }
+
+      function enter(){
+        ensureLens();
+        thumb.addEventListener('mousemove', update);
+      }
+      function leave(){
+        thumb.removeEventListener('mousemove', update);
+        if(lens){
+          lens.remove();
+          lens = null;
+        }
+      }
+
+      thumb.addEventListener('mouseenter', enter);
+      thumb.addEventListener('mouseleave', leave);
+
+      img.addEventListener('load', () => {
+        if(lens) lens.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+      });
+    }
+
+    /* ===== Additional Results video switcher ===== */
+    function initAdditionalSwitch(){
+      const player = document.getElementById('additionalPlayer');
+      const source = document.getElementById('additionalSource');
+      const labelEl = document.querySelector('[data-current-label]');
+      const thumbs = Array.from(document.querySelectorAll('.video-thumb[data-video-src]'));
+      if(!player || !source || thumbs.length === 0) return;
+
+      const safePlay = () => {
+        const p = player.play();
+        if(p && typeof p.catch === "function") p.catch(() => {});
+      };
+
+      function setActive(btn){
+        thumbs.forEach(b => b.classList.toggle('is-active', b === btn));
+
+        const src = btn.getAttribute('data-video-src');
+        const label = btn.getAttribute('data-video-label') || btn.textContent.trim();
+        if(labelEl) labelEl.textContent = label;
+
+        if(source.getAttribute('src') === src){
+          player.currentTime = 0;
+          safePlay();
+          return;
+        }
+
+        player.pause();
+        source.setAttribute('src', src);
+        player.load();
+        safePlay();
+      }
+
+      thumbs.forEach(btn => {
+        btn.addEventListener('click', () => setActive(btn));
+        btn.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            setActive(btn);
+          }
+        });
+      });
+
+      setActive(document.querySelector('.video-thumb.is-active') || thumbs[0]);
+    }
+
+    /* ===== Thumbnail previews: freeze at 1s ===== */
+    function initThumbnailStillPreviews(){
+      const TARGET_T = 1.0;
+
+      document.querySelectorAll('video.video-thumb-preview').forEach(v => {
+        v.removeAttribute('controls');
+        v.autoplay = false;
+        v.loop = false;
+
+        const seekAndFreeze = () => {
+          const dur = Number.isFinite(v.duration) ? v.duration : 0;
+          const t = dur > 0 ? Math.min(Math.max(TARGET_T, 0), Math.max(dur - 0.05, 0)) : TARGET_T;
+          try { v.currentTime = t; } catch(e) {}
+        };
+
+        if(v.readyState >= 1) seekAndFreeze();
+        else v.addEventListener('loadedmetadata', seekAndFreeze, { once:true });
+
+        v.addEventListener('seeked', () => { try { v.pause(); } catch(e) {} });
+        v.addEventListener('play', () => { try { v.pause(); } catch(e) {} });
+
+        v.setAttribute('playsinline', '');
+        v.muted = true;
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.thumb img').forEach(enableMagnifier);
+      initAdditionalSwitch();
+      initThumbnailStillPreviews();
+    });
+  })();
+  </script>
+</body>
+</html>
