@@ -470,13 +470,21 @@
     .abstract-figure{margin:0 0 14px}
     .figure-cap{margin-top:8px;color:var(--muted);font-size:14px}
     
-    /* ✏️ 여기 부분만 이렇게 수정 */
+    /* 공통 blurb 스타일 */
     .blurb{
       margin:8px 0 0;
-      color:var(--text);        /* framework-ddc-text와 동일한 색 */
-      font-size:15.5px;         /* 동일 폰트 크기 */
-      line-height:1.6;          /* 동일 line-height */
-    }    
+      color:var(--text);
+      font-size:15.5px;
+      line-height:1.6;
+    }
+    
+    /* 특히 quantitative / qualitative 카드 안에서는 확실히 덮어쓰기 */
+    .subcard .blurb{
+      color:var(--text) !important;
+      font-size:15.5px !important;
+      line-height:1.6 !important;
+    }
+    
     .abstract-text{font-size:15.5px}
 
     /* Subcards */
