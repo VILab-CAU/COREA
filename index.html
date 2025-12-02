@@ -850,14 +850,15 @@
         
           <!-- 두 이미지 바로 아래에 카드 전체 폭으로 텍스트 -->
           <p class="framework-ddc-text">
-            Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue, and for those in red 
-            the splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. Only Gaussians with 
-            &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green components, exclusively when this splitting contributes 
-            to overall loss reduction, and the normalized Gaussian ratio (relative to &alpha; = 0) visualizes how the amount of splitting varies 
-            with the DDC weight &alpha;. The bar plots show the PSNR for NVS and PBR, while the line plot indicates the cosine similarity between 
-            the principal eigenvectors of <i>S</i><sub>image</sub> and S<sub>total</sub>, where the similarity drops sharply after &alpha; &ge; 0.5 
-            (indicating a shift from image-driven to normal-driven splitting) and the PBR PSNR peaks at &alpha; = 0.2, providing the best balance 
-            between geometric fidelity and Gaussian efficiency.
+            In the Dual-Density Control framework, Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
+            For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
+            Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
+
+            As shown in the DDC ablation study, the effect of the DDC weight &alpha; on reconstruction quality and splitting dynamics is visualized. 
+            The bar plots show the PSNR for NVS and PBR, while the line plot indicates the cosine similarity between the principal eigenvectors of <i>S</i><sub>image</sub> and <i>S</i><sub>total</sub>. 
+            The normalized Gaussian ratio (relative to &alpha; = 0) visualizes how the amount of splitting varies with &alpha;. As &alpha; increases, the cosine similarity drops sharply after &alpha; &ge; 0.5, suggesting a shift from image-driven to normal-driven splitting. 
+            PBR PSNR peaks at &alpha; = 0.2, providing the best balance between geometric fidelity and Gaussian efficiency.
+
           </p>
         </div>
       </section>
