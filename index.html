@@ -520,30 +520,47 @@
       transform: translateY(-1px);
     }
     
-    /* 상단: DDC / Ablation 이미지를 같은 줄에 */
+    /* ===== DDC 레이아웃: 이미지 2개는 같은 선, 텍스트가 감싸도록 ===== */
+    
+    /* 기존 flex 기반 .ddc-row / .ddc-col 정의는 삭제 or 주석 처리하고 이걸로 교체 */
+    
     #framework-extra .ddc-row{
-      display:flex;
-      gap:18px;
-      align-items:flex-start;
-      flex-wrap:wrap;
-    }
-    #framework-extra .ddc-col{
-      flex:1 1 0;
-      min-width:0;
+      margin-bottom: 10px;      /* 이미지 아래 여백 */
     }
     
-    /* 이미지 조금 더 크게 */
-    #framework-extra .thumb.thumb--fit img{
-      width:100%;
-      height:auto;
+    /* 공통 컬럼(왼쪽/오른쪽) */
+    #framework-extra .ddc-col{
+      width: 48%;
+    }
+    
+    /* 왼쪽 DDC 다이어그램 */
+    #framework-extra .ddc-row .ddc-col:first-child{
+      float: left;
+      margin-right: 2%;
+    }
+    
+    /* 오른쪽 DDC ablation */
+    #framework-extra .ddc-row .ddc-col:last-child{
+      float: right;
+      margin-left: 2%;
+    }
+    
+    /* 카드 끝에서 float 정리 */
+    #framework-extra::after{
+      content: "";
+      display: block;
+      clear: both;
     }
     
     /* 모바일에서는 세로로 쌓이게 */
     @media (max-width: 900px){
-      #framework-extra .ddc-row{
-        flex-direction:column;
+      #framework-extra .ddc-col{
+        float: none;
+        width: 100%;
+        margin: 0 0 10px 0;
       }
     }
+
     
     .framework-ddc-text{
       margin-top: 12px;
