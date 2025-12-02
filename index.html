@@ -6,9 +6,8 @@
   <title>COREA: Coarse-to-Fine 3D Representation Alignment Between Relightable 3D Gaussians and SDF via Bidirectional 3D-to-3D Supervision</title>
   <meta name="description" content="Project page template for a computer vision paper." />
 
-  <!-- ✅ TAB ICON (favicon) using Taegeuk.png -->
+  <!-- TAB ICON (favicon) -->
   <link rel="icon" type="image/png" href="./assets/icons/Taegeuk.png" />
-  <!-- Optional (nice for iOS home screen / pinned) -->
   <link rel="apple-touch-icon" href="./assets/icons/Taegeuk.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +44,7 @@
 
     *{box-sizing:border-box}
 
-    /* ✅ PRE-TLDR: remove neon aura on page background */
+    /* PRE-TLDR: remove neon aura on page background */
     body{
       margin:0;
       color:var(--text);
@@ -53,11 +52,11 @@
       background: #ffffff;
     }
 
-    /* ✅ PRE-TLDR: neutral links (no glow) */
+    /* PRE-TLDR: neutral links (no glow) */
     a{color:var(--brandBlue);text-decoration:none}
     a:hover{ text-decoration:none; filter:none; }
 
-    /* ✅ PRE-TLDR: neutral focus (no neon glow) */
+    /* PRE-TLDR: neutral focus (no neon glow) */
     :focus-visible{
       outline:3px solid rgba(0,86,162,.25);
       outline-offset:3px;
@@ -71,7 +70,7 @@
     header.hero .authors,
     header.hero .link-row{ justify-content:center; }
 
-    /* Top bar (Pantone 2945C) — ✅ PRE-TLDR: no neon shadow */
+    /* Top bar (Pantone 2945C) — no neon shadow */
     .topbar{
       position: sticky;
       top: 0;
@@ -100,7 +99,7 @@
       white-space: nowrap;
     }
 
-    /* ✅ PRE-TLDR: remove neon glow on logo pills */
+    /* remove neon glow on logo pills */
     .topbar-logos a{
       width: 128px;
       height: 44px;
@@ -143,8 +142,8 @@
       line-height:1.12;
       letter-spacing:-0.02em;
       display:flex;
-      flex-direction:column;   /* 위: COREA, 아래: 부제 */
-      align-items:center;      /* ✅ COREA 기준으로 수평 중앙 정렬 */
+      flex-direction:column;
+      align-items:center;
     }
 
     .title-row{
@@ -153,7 +152,6 @@
       gap:12px;
     }
 
-    /* ✅ PRE-TLDR: remove neon glow on icon */
     .title-icon{
       width:44px;
       height:44px;
@@ -167,14 +165,10 @@
       .title-icon{ width:36px; height:36px; }
     }
 
-    /* =========================
-       ✅ COREA ONLY: main animated title
-       ========================= */
+    /* COREA animated title */
     .title-main{
       position: relative;
       display:block;
-
-      /* ✅ COREA size slightly reduced */
       font-size: clamp(34px, 5.8vw, 72px);
       font-weight: 900;
       letter-spacing: -0.02em;
@@ -204,7 +198,6 @@
       100% { background-position: 0% 50%; filter: brightness(0.8); }
     }
 
-    /* Underline Reverse Direction Flow */
     .title-main::before{
       content:"";
       position:absolute;
@@ -237,22 +230,21 @@
       .title-main::before{ display:none; }
     }
 
-    /* motion accessibility */
     @media (prefers-reduced-motion: reduce){
       .title-main{ animation:none; filter:none; }
       .title-main::before{ animation:none; }
     }
 
     .title-sub{
-      display:inline-block;          /* ✅ 내용 폭만큼만 */
+      display:inline-block;
       margin-top:10px;
       font-size:clamp(18px,2.9vw,29px);
       font-weight:800;
       letter-spacing:-0.015em;
-      text-align:center;             /* ✅ 두 줄 모두 가운데 정렬 */
+      text-align:center;
     }
 
-    /* CoReA 하나의 gradation 느낌 */
+    /* CoReA gradient letters */
     .corea-accent{
       font-weight: 900;
       background-image: var(--corea-grad);
@@ -261,17 +253,14 @@
       color: transparent;
       text-shadow: none;
     }
-    /* Co: 왼쪽 영역 */
     .corea-accent--co{
       background-size: 300% 100%;
       background-position: 0% 50%;
     }
-    /* Re: 가운데 영역 */
     .corea-accent--re{
       background-size: 300% 100%;
       background-position: 50% 50%;
     }
-    /* A: 오른쪽 영역 */
     .corea-accent--a{
       background-size: 300% 100%;
       background-position: 100% 50%;
@@ -349,9 +338,7 @@
       outline-offset: 3px;
     }
 
-    /* =========================
-       ✅ FROM TLDR AND BELOW: re-enable neon styling
-       ========================= */
+    /* FROM TLDR AND BELOW: re-enable neon styling */
     .after-tldr{
       position:relative;
       z-index:0;
@@ -465,7 +452,7 @@
       backface-visibility: hidden;
     }
 
-    /* ===== 95% + centered (only for .thumb--fit images) ===== */
+    /* 95% + centered (only for .thumb--fit images) */
     .thumb.thumb--fit{
       display:flex;
       justify-content:center;
@@ -501,11 +488,34 @@
       transform: translateY(-1px);
     }
 
+    /* DDC card: turn off neon + use framework text style */
+    #framework-extra{
+      box-shadow: 0 10px 22px rgba(0,0,0,0.06);   /* no neon glow */
+    }
+    #framework-extra:hover{
+      border-color: rgba(0,86,162,.22);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.10);   /* softer shadow */
+    }
+    #framework-extra .thumb{
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);   /* remove neon glow on image box */
+    }
+    #framework-extra .thumb:hover{
+      border-color: rgba(0,86,162,.22);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.10);
+      transform: translateY(-1px);
+    }
+    .framework-ddc-text{
+      margin-top: 8px;
+      font-size: 15.5px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
     /* Qualitative stack */
     .media-stack{display:flex;flex-direction:column;gap:16px}
     .media{display:flex;flex-direction:column;gap:8px}
 
-    /* ===== Additional results (single video + still previews) ===== */
+    /* Additional results (single video + still previews) */
     .video-switcher{ display:flex; flex-direction:column; gap:12px; text-align:center; }
 
     .video-switcher-head{
@@ -529,7 +539,7 @@
       box-shadow: 0 12px 26px rgba(0,86,162,0.22), var(--glow-sm);
     }
 
-    /* ✅ FIX: Additional Results pill = Pantone 2945C solid + no neon */
+    /* Additional Results pill = Pantone 2945C solid + no neon */
     #additional .current-pill{
       background: var(--brandBlue);
       color:#ffffff;
@@ -636,7 +646,6 @@
             <span class="title-main">COREA:</span>
           </span>
 
-          <!-- ✅ CoReA 하나의 gradation + Between 윗줄 -->
           <span class="title-sub">
             <span class="corea-accent corea-accent--co">Co</span>arse-to-Fine 3D
             <span class="corea-accent corea-accent--re">Re</span>presentation
@@ -738,10 +747,7 @@
         </div>
       </section>
 
-      <!-- =======================
-           Framework (Overview)
-           + extra box under text
-           ======================= -->
+      <!-- Framework (Overview) -->
       <section class="section card abstract-card" id="overview">
         <h2>Overview of the COREA framework.</h2>
 
@@ -760,22 +766,19 @@
           In the second stage, Inverse PBR is performed using the refined geometry to decompose BRDF and lighting and enable relighting under novel illumination conditions.</p>
         </div>
 
-          <!-- ✅ Framework detail: image only inside the subcard -->
-          <div class="subcard" id="framework-extra">
-            <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
-          
-            <figure class="abstract-figure">
-              <div class="thumb thumb--fit">
-                <!-- 여기 이미지 파일만 교체해서 쓰면 됨 -->
-                <img src="./assets/DDC.png" alt="Detailed view of COREA framework modules" />
-              </div>
-            </figure>
-          </div>
-          
-          <!-- ✅ DDC 설명: 카드(이미지 박스) 바깥으로 분리 -->
-          <p class="blurb" style="margin-top:10px;">
-            Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
-            For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
+        <!-- Framework detail: DDC image + text -->
+        <div class="subcard" id="framework-extra">
+          <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
+
+          <figure class="abstract-figure">
+            <div class="thumb thumb--fit">
+              <img src="./assets/DDC.png" alt="Detailed view of Dual-Density Control module" />
+            </div>
+          </figure>
+
+          <p class="framework-ddc-text">
+            Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue.
+            For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>.
             Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
           </p>
         </div>
@@ -902,7 +905,7 @@
 
   <script>
   (() => {
-    /* ===== Image magnifier ===== */
+    /* Image magnifier */
     const ZOOM = 2.6;
     const LENS = 160;
     const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
@@ -970,7 +973,7 @@
       });
     }
 
-    /* ===== Additional Results video switcher ===== */
+    /* Additional Results video switcher */
     function initAdditionalSwitch(){
       const player = document.getElementById('additionalPlayer');
       const source = document.getElementById('additionalSource');
@@ -1015,7 +1018,7 @@
       setActive(document.querySelector('.video-thumb.is-active') || thumbs[0]);
     }
 
-    /* ===== Thumbnail previews: freeze at 1s ===== */
+    /* Thumbnail previews: freeze at 1s */
     function initThumbnailStillPreviews(){
       const TARGET_T = 1.0;
 
