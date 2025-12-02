@@ -519,42 +519,39 @@
       box-shadow: 0 14px 30px rgba(0,0,0,0.10);
       transform: translateY(-1px);
     }
-
-    /* DDC 레이아웃: 그림은 양옆, 텍스트가 두 이미지를 감싸도록 */
-    #framework-extra .ddc-figure-left{
-      float:left;
-      width: min(52%, 480px);   /* ⬅ 왼쪽 그림 더 크게 */
-      margin:0 18px 10px 0;
+    
+    /* 상단: DDC / Ablation 이미지를 같은 줄에 */
+    #framework-extra .ddc-row{
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      flex-wrap:wrap;
     }
-    #framework-extra .ddc-figure-right{
-      float:right;
-      width: min(46%, 420px);   /* ⬅ 오른쪽 그래프도 키움 */
-      margin:0 0 10px 18px;
+    #framework-extra .ddc-col{
+      flex:1 1 0;
+      min-width:0;
     }
-
-    /* 모바일에서는 float 풀고 세로 배치 */
+    
+    /* 이미지 조금 더 크게 */
+    #framework-extra .thumb.thumb--fit img{
+      width:100%;
+      height:auto;
+    }
+    
+    /* 모바일에서는 세로로 쌓이게 */
     @media (max-width: 900px){
-      #framework-extra .ddc-figure-left,
-      #framework-extra .ddc-figure-right{
-        float:none;
-        width:100%;
-        margin:0 0 10px 0;
+      #framework-extra .ddc-row{
+        flex-direction:column;
       }
     }
-
-    /* 카드 맨 끝에서 float 정리 */
-    #framework-extra::after{
-      content:"";
-      display:block;
-      clear:both;
-    }
-
+    
     .framework-ddc-text{
-      margin-top: 8px;
+      margin-top: 12px;
       font-size: 15.5px;
       color: var(--text);
       line-height: 1.6;
     }
+
 
     /* Qualitative stack */
     .media-stack{display:flex;flex-direction:column;gap:16px}
@@ -811,39 +808,39 @@
           In the second stage, Inverse PBR is performed using the refined geometry to decompose BRDF and lighting and enable relighting under novel illumination conditions.</p>
         </div>
 
-        <!-- Framework detail: DDC image + text -->
         <div class="subcard" id="framework-extra">
-          <!-- 왼쪽: DDC 다이어그램 (float left) -->
-          <div class="ddc-figure-left">
-            <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
-            <figure class="abstract-figure" style="margin:0;">
-              <div class="thumb thumb--fit">
-                <img src="./assets/DDC.png" alt="Detailed view of Dual-Density Control module" />
-              </div>
-            </figure>
+          <div class="ddc-row">
+            <!-- 왼쪽: DDC 다이어그램 -->
+            <div class="ddc-col">
+              <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
+              <figure class="abstract-figure" style="margin:0;">
+                <div class="thumb thumb--fit">
+                  <img src="./assets/DDC.png" alt="Detailed view of Dual-Density Control module" />
+                </div>
+              </figure>
+            </div>
+        
+            <!-- 오른쪽: DDC ablation -->
+            <div class="ddc-col">
+              <h3 style="margin:0 0 10px;font-size:18px;">DDC ablation study</h3>
+              <figure class="abstract-figure" style="margin:0;">
+                <div class="thumb thumb--fit">
+                  <img src="./assets/DDC_ablation.png" alt="Ablation study for Dual-Density Control" />
+                </div>
+              </figure>
+            </div>
           </div>
-
-          <!-- 오른쪽: DDC ablation (float right) -->
-          <div class="ddc-figure-right">
-            <h3 style="margin:0 0 10px;font-size:18px;">DDC ablation study</h3>
-            <figure class="abstract-figure" style="margin:0;">
-              <div class="thumb thumb--fit">
-                <img src="./assets/DDC_ablation.png" alt="Ablation study for Dual-Density Control" />
-              </div>
-            </figure>
-          </div>
-
-          <!-- 아래 텍스트는 두 그림을 감싸면서 흐름 -->
+        
+          <!-- 두 이미지 바로 아래에 카드 전체 폭으로 텍스트 -->
           <p class="framework-ddc-text">
             Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue, and for those in red 
-            the splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>.
-            Only Gaussians with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green components, exclusively when 
-            this splitting contributes to overall loss reduction, and the normalized Gaussian ratio (relative to &alpha; = 0) visualizes how 
-            the amount of splitting varies with the DDC weight &alpha;.
-            The bar plots show the PSNR for NVS and PBR, while the line plot indicates the cosine similarity between the principal eigenvectors 
-            of <i>S</i><sub>image</sub> and S<sub>total</sub>, where the similarity drops sharply after &alpha; &ge; 0.5 (indicating a shift from 
-            image-driven to normal-driven splitting) and the PBR PSNR peaks at &alpha; = 0.2, providing the best balance between geometric fidelity 
-            and Gaussian efficiency.
+            the splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. Only Gaussians with 
+            &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green components, exclusively when this splitting contributes 
+            to overall loss reduction, and the normalized Gaussian ratio (relative to &alpha; = 0) visualizes how the amount of splitting varies 
+            with the DDC weight &alpha;. The bar plots show the PSNR for NVS and PBR, while the line plot indicates the cosine similarity between 
+            the principal eigenvectors of <i>S</i><sub>image</sub> and S<sub>total</sub>, where the similarity drops sharply after &alpha; &ge; 0.5 
+            (indicating a shift from image-driven to normal-driven splitting) and the PBR PSNR peaks at &alpha; = 0.2, providing the best balance 
+            between geometric fidelity and Gaussian efficiency.
           </p>
         </div>
       </section>
