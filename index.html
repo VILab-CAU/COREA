@@ -700,7 +700,7 @@
         <div class="link-row" aria-label="Project links">
           <a class="projlink" href="./assets/paper.pdf" target="_blank" rel="noopener">Paper</a>
           <a class="projlink" href="https://arxiv.org/abs/XXXX.XXXXX" target="_blank" rel="noopener">arXiv</a>
-          <a class="projlink" href="https://github.com/VILab-CAU/COREA-arXiv" target="_blank" rel="noopener">Code</a>
+          <a class="projlink" href="https://github.com/YOUR/REPO" target="_blank" rel="noopener">Code</a>
         </div>
       </header>
     </div>
@@ -738,6 +738,10 @@
         </div>
       </section>
 
+      <!-- =======================
+           Framework (Overview)
+           + extra box under text
+           ======================= -->
       <section class="section card abstract-card" id="overview">
         <h2>Overview of the COREA framework.</h2>
 
@@ -754,6 +758,15 @@
           (ii) NGA aligns 3DGS to the SDF by matching Gaussian depth to the SDF depth and supervising Gaussian normals with SDF normals.
           To prevent excessive Gaussian splitting during NGA, the DDC module suppresses unnecessary densification for efficient geometry refinement.
           In the second stage, Inverse PBR is performed using the refined geometry to decompose BRDF and lighting and enable relighting under novel illumination conditions.</p>
+        </div>
+
+        <!-- ✅ 여기에 자유롭게 내용 쓰면 됨 -->
+        <div class="subcard" id="framework-extra">
+          <h3 style="margin:0 0 10px;font-size:18px;">Framework Details</h3>
+          <p class="blurb">
+            <!-- 이 안에 Framework 관련 추가 설명 작성하면 됨 -->
+            <!-- 예: DSA/NGA/DDC 간의 상호작용, 학습 스케줄, 손실 조합 등 -->
+          </p>
         </div>
       </section>
 
