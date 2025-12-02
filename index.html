@@ -762,7 +762,7 @@
 
         <!-- ✅ Framework detail: image + text -->
         <div class="subcard" id="framework-extra">
-          <h3 style="margin:0 0 10px;font-size:18px;">Framework Details</h3>
+          <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
 
           <figure class="abstract-figure">
             <div class="thumb thumb--fit">
@@ -772,12 +772,9 @@
           </figure>
 
           <p class="blurb">
-            <!-- 여기에 Framework 관련 세부 설명 작성하면 됨 -->
-            <!-- 예시:
-            This illustration highlights how DSA, NGA, and DDC interact throughout training.
-            The first stage stabilizes geometry alignment in both SDF and 3DGS space,
-            and the second stage leverages the refined geometry to perform inverse PBR with consistent BRDF–lighting decomposition.
-            -->
+            Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
+            For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
+            Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
           </p>
         </div>
       </section>
