@@ -760,18 +760,20 @@
           In the second stage, Inverse PBR is performed using the refined geometry to decompose BRDF and lighting and enable relighting under novel illumination conditions.</p>
         </div>
 
-        <!-- ✅ Framework detail: image + text -->
-        <div class="subcard" id="framework-extra">
-          <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
-
-          <figure class="abstract-figure">
-            <div class="thumb thumb--fit">
-              <!-- 여기 이미지 파일만 교체해서 쓰면 됨 -->
-              <img src="./assets/DDC.png" alt="Detailed view of COREA framework modules" />
-            </div>
-          </figure>
-
-          <p class="blurb">
+          <!-- ✅ Framework detail: image only inside the subcard -->
+          <div class="subcard" id="framework-extra">
+            <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
+          
+            <figure class="abstract-figure">
+              <div class="thumb thumb--fit">
+                <!-- 여기 이미지 파일만 교체해서 쓰면 됨 -->
+                <img src="./assets/DDC.png" alt="Detailed view of COREA framework modules" />
+              </div>
+            </figure>
+          </div>
+          
+          <!-- ✅ DDC 설명: 카드(이미지 박스) 바깥으로 분리 -->
+          <p class="blurb" style="margin-top:10px;">
             Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
             For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
             Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
