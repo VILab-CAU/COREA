@@ -579,38 +579,57 @@
       /* width: 90%; */
     /* } */
 
-    /* ===== DDC 레이아웃: 단일 이미지 왼쪽 정렬 + 크게 ===== */
+    /* ===== DDC 레이아웃: 이미지 1/2 (왼쪽) + 텍스트 1/2 (오른쪽) ===== */
 
     #framework-extra .ddc-row{
-      margin-bottom: 10px;
       display: flex;
-      justify-content: flex-start;  /* 왼쪽으로 붙이기 */
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 4px;
     }
 
     #framework-extra .ddc-col{
-      float: none;
-      width: 100%;                  /* 한 줄 전체 사용 */
       margin: 0;
     }
 
-    /* 이 카드 안에서는 thumb 를 가운데 말고 왼쪽 정렬 */
+    /* 왼쪽: 이미지 컬럼 = 반 너비 */
+    #framework-extra .ddc-col-img{
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+
+    /* 오른쪽: 텍스트 컬럼 = 나머지 공간 */
+    #framework-extra .ddc-col-text{
+      flex: 1 1 0;
+      max-width: 50%;
+    }
+
+    /* 이 카드 안에서는 thumb 를 왼쪽 정렬 + 조금 더 크게 */
     #framework-extra .thumb.thumb--fit{
       justify-content: flex-start;
     }
-
-    /* 기본 95% → 100%로 살짝 더 키우기 */
     #framework-extra .thumb.thumb--fit img{
       width: 100%;
       height: auto;
     }
-    
+
     .framework-ddc-text{
-      margin-top: 12px;
+      margin: 0;
       font-size: 15.5px;
       color: var(--text);
       line-height: 1.6;
     }
 
+    /* 모바일에서는 세로로 쌓이게 */
+    @media (max-width: 900px){
+      #framework-extra .ddc-row{
+        flex-direction: column;
+      }
+      #framework-extra .ddc-col-img,
+      #framework-extra .ddc-col-text{
+        max-width: 100%;
+      }
+    }
 
     /* Qualitative stack */
     .media-stack{display:flex;flex-direction:column;gap:16px}
@@ -868,29 +887,27 @@
         </div>
 
         <div class="subcard" id="framework-extra">
+          <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
+
           <div class="ddc-row">
-            <!-- 왼쪽: DDC 다이어그램만 유지 -->
-            <div class="ddc-col">
-              <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
+            <!-- 왼쪽: DDC 이미지 (반 너비) -->
+            <div class="ddc-col ddc-col-img">
               <figure class="abstract-figure" style="margin:0;">
                 <div class="thumb thumb--fit">
                   <img src="./assets/DDC.png" alt="Detailed view of Dual-Density Control module" />
                 </div>
               </figure>
             </div>
+
+            <!-- 오른쪽: 설명 텍스트 -->
+            <div class="ddc-col ddc-col-text">
+              <p class="framework-ddc-text">
+                In the Dual-Density Control framework, Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
+                For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
+                Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
+              </p>
+            </div>
           </div>
-        
-          <!-- 이미지 아래 전체 폭 텍스트 -->
-          <p class="framework-ddc-text">
-            In the Dual-Density Control framework, Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
-            For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
-            Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
-        <!-- 
-            As shown in the DDC ablation study, the effect of the DDC weight &alpha; on reconstruction quality and splitting dynamics is visualized. 
-            The bar plots show the PSNR for NVS and PBR, while the line plot indicates the cosine similarity between the principal eigenvectors of <i>S</i><sub>image</sub> and <i>S</i><sub>total</sub>. 
-            The normalized Gaussian ratio (relative to &alpha; = 0) visualizes how the amount of splitting varies with &alpha;. As &alpha; increases, the cosine similarity drops sharply after &alpha; &ge; 0.5, suggesting a shift from image-driven to normal-driven splitting. 
-            PBR PSNR peaks at &alpha; = 0.2, providing the best balance between geometric fidelity and Gaussian efficiency. -->
-          </p>
         </div>
       </section>
 
