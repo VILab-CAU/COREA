@@ -23,7 +23,7 @@
 
       /* Brand / neon palette */
       --brandBlue:#0056A2;     /* Pantone 2945C */
-      --accent:#00D4FF;        /* neon cyan */
+      --accent:#00D4FF;        /* neon cyan */ㄹ
       --neonBlue1:#00D4FF;
       --neonBlue2:#2B74FF;
 
@@ -548,8 +548,16 @@
     #framework-extra .ddc-col-text{
       flex: 1 1 0;
       max-width: 50%;
-      display: flex;          /* 추가 */
-      align-items: flex-start;/* 추가: 안의 내용(문단)을 위에 붙이기 */
+      display: flex;          /* 텍스트 블록을 직접 위로 붙이기 */
+      align-items: flex-start;
+    }
+    
+    /* 텍스트만 살짝 위로 당기기 */
+    #framework-extra .framework-ddc-text{
+      margin: -6px 0 0 0;     /* 위쪽 여백만 -6px 정도로 줄이기 */
+      font-size: 15.5px;
+      color: var(--text);
+      line-height: 1.6;
     }
 
     /* 이 카드 안에서는 thumb 를 왼쪽 정렬 + 크게 */
