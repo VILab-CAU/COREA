@@ -151,41 +151,6 @@
       align-items:baseline;
       gap:12px;
     }
-    
-    /* ⬇️ 아이콘 그라데이션 테두리 래퍼 */
-    .title-icon-wrap{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:52px;
-      height:52px;
-      padding:3px;                 /* 테두리 두께 느낌 */
-      border-radius:16px;          /* 둥근 사각형 느낌 (원형 원하면 999px) */
-      background-image: var(--corea-grad);
-      background-size: 200% 100%;
-      background-position: 0% 50%;
-      animation: coreaBidirectionalBar 3.6s ease-in-out infinite;
-    }
-    
-    /* 안쪽 실제 아이콘 이미지 */
-    .title-icon{
-      width:100%;
-      height:100%;
-      border-radius:12px;          /* 안쪽도 살짝 둥글게 */
-      object-fit:contain;
-      display:block;
-      transform: translateY(2px);
-      filter: none;
-    }
-    
-    @media (max-width:560px){
-      .title-icon-wrap{
-        width:44px;
-        height:44px;
-        padding:2px;
-        border-radius:14px;
-      }
-    }
 
     .title-icon{
       width:44px;
@@ -747,9 +712,7 @@
       <header class="hero">
         <h1 class="title">
           <span class="title-row">
-            <span class="title-icon-wrap">
-              <img class="title-icon" src="./assets/icons/Taegeuk.png" alt="COREA icon" />
-            </span>
+            <img class="title-icon" src="./assets/icons/Taegeuk.png" alt="COREA icon" />
             <span class="title-main">COREA:</span>
           </span>
 
