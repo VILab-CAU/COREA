@@ -502,17 +502,17 @@
       box-shadow: 0 14px 30px rgba(0,0,0,0.08), var(--glow-md);
       transform: translateY(-1px);
     }
-
+    
     /* DDC card: turn off neon + use framework text style */
     #framework-extra{
-      box-shadow: 0 10px 22px rgba(0,0,0,0.06);   /* no neon glow */
+      box-shadow: 0 10px 22px rgba(0,0,0,0.06);
     }
     #framework-extra:hover{
       border-color: rgba(0,86,162,.22);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.10);   /* softer shadow */
+      box-shadow: 0 14px 30px rgba(0,0,0,0.10);
     }
     #framework-extra .thumb{
-      box-shadow: 0 10px 22px rgba(0,0,0,0.08);   /* remove neon glow on image box */
+      box-shadow: 0 10px 22px rgba(0,0,0,0.08);
     }
     #framework-extra .thumb:hover{
       border-color: rgba(0,86,162,.22);
@@ -520,53 +520,64 @@
       transform: translateY(-1px);
     }
     
-    /* ===== DDC 레이아웃: 이미지 2개는 같은 선, 텍스트가 감싸도록 ===== */
-    
-    /* 기존 flex 기반 .ddc-row / .ddc-col 정의는 삭제 or 주석 처리하고 이걸로 교체 */
-    
+    /* ===== DDC 레이아웃: 왼쪽(제목+이미지) / 오른쪽(텍스트) ===== */
     #framework-extra .ddc-row{
-      margin-bottom: 10px;      /* 이미지 아래 여백 */
+      display: flex;
+      align-items: flex-start;   /* 제목과 텍스트를 같은 라인에서 시작 */
+      gap: 18px;
     }
     
-    /* 공통 컬럼(왼쪽/오른쪽) */
     #framework-extra .ddc-col{
-      width: 48%;
+      margin: 0;
     }
     
-    /* 왼쪽 DDC 다이어그램 */
-    #framework-extra .ddc-row .ddc-col:first-child{
-      float: left;
-      margin-right: 2%;
+    /* 왼쪽 컬럼: 제목 + 이미지 */
+    #framework-extra .ddc-col-img{
+      flex: 0 0 55%;
+      max-width: 55%;
     }
     
-    /* 오른쪽 DDC ablation */
-    #framework-extra .ddc-row .ddc-col:last-child{
-      float: right;
-      margin-left: 2%;
+    /* 오른쪽 컬럼: 텍스트 */
+    #framework-extra .ddc-col-text{
+      flex: 1 1 45%;
+      max-width: 45%;
+      display: flex;
+      align-items: flex-start;
     }
     
-    /* 카드 끝에서 float 정리 */
-    #framework-extra::after{
-      content: "";
-      display: block;
-      clear: both;
+    /* DDC 제목 스타일 (기존 h3와 동일) */
+    #framework-extra .ddc-title{
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 700;
     }
     
-    /* 모바일에서는 세로로 쌓이게 */
-    @media (max-width: 900px){
-      #framework-extra .ddc-col{
-        float: none;
-        width: 100%;
-        margin: 0 0 10px 0;
-      }
+    /* 이미지 컨테이너: 왼쪽 정렬 + 꽉 차게 */
+    #framework-extra .thumb.thumb--fit{
+      justify-content: flex-start;
     }
-
+    #framework-extra .thumb.thumb--fit img{
+      width: 100%;
+      height: auto;
+    }
     
-    .framework-ddc-text{
-      margin-top: 12px;
+    /* 텍스트: 카드 상단 패딩에 딱 맞춰 시작 */
+    #framework-extra .ddc-col-text .framework-ddc-text{
+      margin: 0;
       font-size: 15.5px;
       color: var(--text);
       line-height: 1.6;
+    }
+    
+    /* 모바일에서는 위→아래로 쌓이게 */
+    @media (max-width: 900px){
+      #framework-extra .ddc-row{
+        flex-direction: column;
+      }
+      #framework-extra .ddc-col-img,
+      #framework-extra .ddc-col-text{
+        max-width: 100%;
+      }
     }
 
 
@@ -827,9 +838,9 @@
 
         <div class="subcard" id="framework-extra">
           <div class="ddc-row">
-            <!-- 왼쪽: DDC 다이어그램 -->
-            <div class="ddc-col">
-              <h3 style="margin:0 0 10px;font-size:18px;">Dual-Density Control (DDC)</h3>
+            <!-- 왼쪽: 제목 + 이미지 -->
+            <div class="ddc-col ddc-col-img">
+              <h3 class="ddc-title">Dual-Density Control (DDC)</h3>
               <figure class="abstract-figure" style="margin:0;">
                 <div class="thumb thumb--fit">
                   <img src="./assets/DDC.png" alt="Detailed view of Dual-Density Control module" />
@@ -837,29 +848,14 @@
               </figure>
             </div>
         
-            <!-- 오른쪽: DDC ablation -->
-            <div class="ddc-col">
-              <h3 style="margin:0 0 10px;font-size:18px;">DDC ablation study</h3>
-              <figure class="abstract-figure" style="margin:0;">
-                <div class="thumb thumb--fit">
-                  <img src="./assets/DDC_ablation.png" alt="Ablation study for Dual-Density Control" />
-                </div>
-              </figure>
+            <!-- 오른쪽: 텍스트 -->
+            <div class="ddc-col ddc-col-text">
+              <p class="framework-ddc-text">
+                In the Dual-Density Control framework, Gaussians with accumulated gradients exceeding the threshold are
+                shown in red, while others remain blue. Red Gaussians combine image- and normal-driven splitting matrices into the total matrix <i>S</i><sub>total</sub>, and are split into green ones only when &lambda;<sub>min</sub>(<i>S</i><sub>total</sub>) &lt; 0 and such splitting reduces the overall loss.
+              </p>
             </div>
           </div>
-        
-          <!-- 두 이미지 바로 아래에 카드 전체 폭으로 텍스트 -->
-          <p class="framework-ddc-text">
-            In the Dual-Density Control framework, Gaussians with accumulated gradients exceeding the threshold are shown in red, while others remain blue. 
-            For those in red, splitting matrices from image and normal losses are combined into the total matrix S<sub>total</sub>. 
-            Only those with &lambda;<sub>min</sub>(S<sub>total</sub>) &lt; 0 are further divided into green Gaussians, exclusively when it contributes to overall loss reduction.
-
-            As shown in the DDC ablation study, the effect of the DDC weight &alpha; on reconstruction quality and splitting dynamics is visualized. 
-            The bar plots show the PSNR for NVS and PBR, while the line plot indicates the cosine similarity between the principal eigenvectors of <i>S</i><sub>image</sub> and <i>S</i><sub>total</sub>. 
-            The normalized Gaussian ratio (relative to &alpha; = 0) visualizes how the amount of splitting varies with &alpha;. As &alpha; increases, the cosine similarity drops sharply after &alpha; &ge; 0.5, suggesting a shift from image-driven to normal-driven splitting. 
-            PBR PSNR peaks at &alpha; = 0.2, providing the best balance between geometric fidelity and Gaussian efficiency.
-
-          </p>
         </div>
       </section>
 
